@@ -1,0 +1,10 @@
+.trackingform {
+  display: flex;
+  flex-direction: column;
+}
+
+.trackingform__label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
