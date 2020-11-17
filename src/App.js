@@ -4,6 +4,8 @@ import Scanned from './components/Scanned';
 import TrackingInput from './components/TrackingInput';
 import { Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const useStyles = makeStyles({
   app__container: {

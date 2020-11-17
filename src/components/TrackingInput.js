@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Button, Select, FormControl } from '@material-ui/core';
 import './TrackingInput.css';
+import { db } from '../firebase';
 
 const useStyles = makeStyles({
   button: {
@@ -11,7 +12,7 @@ const useStyles = makeStyles({
     boxShadow: 'none',
     color: 'white',
     height: '3rem',
-    fontSize: '1.2rem',
+    fontSize: '1.1rem',
     '&:hover': {
       backgroundColor: '#0774BD',
       boxShadow: 'none',
@@ -34,9 +35,9 @@ function TrackingInput() {
   const classes = useStyles();
 
   const [trackingNumber, setTrackingNumber] = useState('');
-  const [parcelType, setParcelType] = useState();
-  const [amount, setAmount] = useState();
-  const [disabled, setDisabled] = useState(false);
+  const [parcelType, setParcelType] = useState('Normal');
+  const [amount, setAmount] = useState(1);
+  const [error, setError] = useState('');
 
   const handleTrackingNumber = (e) => {
     if (e.target.value.length === 4 || e.target.value.length === 9) {
@@ -46,12 +47,47 @@ function TrackingInput() {
     }
   }
 
+  const fetchPendingItems = async () => {
+    try {
+      const resp = await db.collection('pendingItems').doc(trackingNumber).get()
+      const data = resp.data();
+      return data;
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+
   const handleParcelType = (e) => {
     setParcelType(e.target.value);
   }
 
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    setError('');
+    const backup = await fetchPendingItems();
+    try {
+      await db.collection('scannedItems').doc(trackingNumber).set({
+        backup: backup,
+        amount: amount,
+        parcelType: parcelType
+      })
+    } catch (error) {
+      console.log(error.message);
+      setError(error.message);
+    }
+
+    if (!error) {
+      db.collection('pendingItems').doc(trackingNumber).delete().catch(error => {
+        console.log(error.message);
+        setError(error.message);
+      })
+    }
+
+  }
+
   return (
-    <form className='trackingform'>
+    <form onSubmit={handleAdd} className='trackingform'>
       <label className='trackingform__label'>Tracking Number</label>
       <TextField
         className={classes.textField}
@@ -80,13 +116,13 @@ function TrackingInput() {
       <TextField
         className={classes.textField}
         id="outlined-margin-dense"
-        defaultValue={1}
         margin="dense"
         variant="outlined"
         type='text'
-
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
       />
-      <Button disabled={trackingNumber.length !== 14} className={classes.button} variant='contained'>{'Add To Scanned List -->'}</Button>
+      <Button type='submit' disabled={trackingNumber.length !== 14} className={classes.button} variant='contained'>{'Add To Scanned List -->'}</Button>
     </form>
   )
 }
