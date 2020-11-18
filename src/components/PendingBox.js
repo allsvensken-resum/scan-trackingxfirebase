@@ -30,7 +30,7 @@ function Box({ item }) {
         }
       }
     }
-  }, [])
+  }, [item.date])
 
   return (
     <div className='box__content'>

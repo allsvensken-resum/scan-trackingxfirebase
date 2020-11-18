@@ -67,6 +67,7 @@
 .box__parcel {
   width: 50%;
   height: 100%;
+  padding: 12.5px 0;
   border-right: 1px solid rgb(220, 220, 220);
   text-align: center;
 }
@@ -74,6 +75,7 @@
 .box__amount {
   width: 50%;
   height: 100%;
+  padding: 12.5px 0;
   text-align: center;
 }
 

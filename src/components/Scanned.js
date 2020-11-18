@@ -10,9 +10,11 @@ function Scanned() {
   const [currentIndex, setCurrentIndex] = useState();
 
   useEffect(() => {
-    db.collection('scannedItems').onSnapshot(snapshot => {
+    const unsubscribe = db.collection('scannedItems').onSnapshot(snapshot => {
       setItems(snapshot.docs);
     })
+
+    return unsubscribe;
   }, [])
 
   return (

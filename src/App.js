@@ -10,6 +10,22 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
   app__container: {
     padding: '0 4rem'
+  },
+
+  app__header: {
+    paddingLeft: '4rem',
+    paddingBottom: '0.8rem',
+    marginTop: 20
+  },
+
+  '@media screen and (max-width: 800px)': {
+    app__container: {
+      padding: '0 2rem'
+    },
+
+    app__header: {
+      paddingLeft: '2rem'
+    }
   }
 });
 
@@ -20,7 +36,7 @@ function App() {
 
   return (
     <div className="App" >
-      <h1 className='app__header'>Scan Tracking</h1>
+      <h1 className={classes.app__header}>Scan Tracking</h1>
       <Grid className={classes.app__container} justify='center' container spacing={5} >
         <Grid item xs={12} sm={6} md={4} lg={4}>
           <PendingTracking />

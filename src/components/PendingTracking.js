@@ -9,9 +9,13 @@ function PendingTracking() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    db.collection('pendingItems').onSnapshot(snapshot => {
+    const unsubscribe = db.collection('pendingItems')
+    .orderBy('date')
+    .onSnapshot(snapshot => {
       setItems(snapshot.docs)
     })
+
+    return unsubscribe;
   }, [])
 
   return (
