@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Button, Select, FormControl } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import './TrackingInput.css';
 import { db } from '../firebase';
 
@@ -26,6 +27,10 @@ const useStyles = makeStyles({
 
   textField: {
     marginBottom: '1.5rem',
+  },
+
+  alert: {
+    marginBottom: '1.5rem'
   }
 
 });
@@ -73,16 +78,14 @@ function TrackingInput() {
         parcelType: parcelType
       })
     } catch (error) {
-      console.log(error.message);
       setError(error.message);
     }
 
-    if (!error) {
-      db.collection('pendingItems').doc(trackingNumber).delete().catch(error => {
-        console.log(error.message);
-        setError(error.message);
-      })
-    }
+    db.collection('pendingItems').doc(trackingNumber).delete().catch(error => {
+      console.log(error.message);
+      setError(error.message);
+    })
+
 
   }
 
@@ -100,8 +103,8 @@ function TrackingInput() {
         inputProps={{ maxLength: 14 }}
         required
       />
+      <label className='trackingform__label'>Parcel Type</label>
       <FormControl margin='dense' variant="outlined" className={classes.textField}>
-        <label className='trackingform__label'>Parcel Type</label>
         <Select
           native
           value={parcelType}
@@ -122,6 +125,7 @@ function TrackingInput() {
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
       />
+      {error && <Alert className={classes.alert} severity="error">Check you tracking number !</Alert>}
       <Button type='submit' disabled={trackingNumber.length !== 14} className={classes.button} variant='contained'>{'Add To Scanned List -->'}</Button>
     </form>
   )

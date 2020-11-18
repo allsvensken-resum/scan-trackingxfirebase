@@ -17,7 +17,7 @@ function PendingTracking() {
   return (
     <div className='box'>
       <div className='box__header'>
-        <p>Pending</p>
+        <p>Pending Tracking</p>
         <p className='box__number'>{items.length}</p>
       </div>
       {
